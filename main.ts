@@ -14,9 +14,37 @@ radio.onReceivedNumber(function (receivedNumber) {
         ArmStatusLP = false
     }
 })
+function NeoPixels () {
+    if (SelfStatus) {
+        strip.setPixelColor(0, neopixel.colors(NeoPixelColors.Green))
+    } else {
+        strip.setPixelColor(0, neopixel.colors(NeoPixelColors.Red))
+    }
+    if (LinkStatus) {
+        strip.setPixelColor(1, neopixel.colors(NeoPixelColors.Green))
+    } else {
+        strip.setPixelColor(1, neopixel.colors(NeoPixelColors.Red))
+    }
+    if (IgniterStatusLP) {
+        strip.setPixelColor(2, neopixel.colors(NeoPixelColors.Green))
+    } else {
+        strip.setPixelColor(2, neopixel.colors(NeoPixelColors.Red))
+    }
+    if (ArmStatusLP) {
+        strip.setPixelColor(3, neopixel.colors(NeoPixelColors.Green))
+    } else {
+        strip.setPixelColor(3, neopixel.colors(NeoPixelColors.Red))
+    }
+    if (Klar) {
+        strip.setPixelColor(4, neopixel.colors(NeoPixelColors.Green))
+    } else {
+        strip.setPixelColor(4, neopixel.colors(NeoPixelColors.Red))
+    }
+    strip.show()
+}
 function Launch () {
     if (Klar) {
-        BuzzerBlink()
+        Klar = false
         basic.showLeds(`
             . . # . .
             . # # # .
@@ -24,23 +52,24 @@ function Launch () {
             . . # . .
             . . # . .
             `)
+        BuzzerBlink()
         radio.sendNumber(42)
         strip.clear()
         strip.show()
         while (pins.digitalReadPin(DigitalPin.P1) == 0) {
-            pins.digitalWritePin(DigitalPin.P8, 1)
-            basic.showLeds(`
-                . . . . .
-                . # # # .
-                . # # # .
-                . # # # .
-                . . . . .
-                `)
             pins.digitalWritePin(DigitalPin.P8, 0)
             basic.showLeds(`
                 . . . . .
                 . # # # .
                 . # . # .
+                . # # # .
+                . . . . .
+                `)
+            pins.digitalWritePin(DigitalPin.P8, 1)
+            basic.showLeds(`
+                . . . . .
+                . # # # .
+                . # # # .
                 . # # # .
                 . . . . .
                 `)
@@ -89,27 +118,30 @@ function Initialize () {
     basic.pause(200)
 }
 function BuzzerBlink () {
-    pins.digitalWritePin(DigitalPin.P13, 1)
-    pins.digitalWritePin(DigitalPin.P14, 1)
-    basic.pause(200)
     pins.digitalWritePin(DigitalPin.P13, 0)
     pins.digitalWritePin(DigitalPin.P14, 0)
-    basic.pause(200)
+    basic.pause(100)
     pins.digitalWritePin(DigitalPin.P13, 1)
     pins.digitalWritePin(DigitalPin.P14, 1)
-    basic.pause(200)
+    basic.pause(100)
     pins.digitalWritePin(DigitalPin.P13, 0)
     pins.digitalWritePin(DigitalPin.P14, 0)
-    basic.pause(200)
+    basic.pause(100)
     pins.digitalWritePin(DigitalPin.P13, 1)
     pins.digitalWritePin(DigitalPin.P14, 1)
-    basic.pause(200)
+    basic.pause(100)
+    pins.digitalWritePin(DigitalPin.P13, 0)
+    pins.digitalWritePin(DigitalPin.P14, 0)
+    basic.pause(100)
+    pins.digitalWritePin(DigitalPin.P13, 1)
+    pins.digitalWritePin(DigitalPin.P14, 1)
+    basic.pause(100)
     pins.digitalWritePin(DigitalPin.P13, 0)
     pins.digitalWritePin(DigitalPin.P14, 0)
 }
 let ArmStatus = false
-let SelfStatus = false
 let Klar = false
+let SelfStatus = false
 let ArmStatusLP = false
 let IgniterStatusLP = false
 let sistSettAktiv = 0
@@ -125,10 +157,8 @@ basic.forever(function () {
     SelfStatus = true
     if (pins.digitalReadPin(DigitalPin.P1) == 0) {
         ArmStatus = true
-        pins.digitalWritePin(DigitalPin.P13, 1)
     } else {
         ArmStatus = false
-        pins.digitalWritePin(DigitalPin.P13, 0)
     }
     if (pins.digitalReadPin(DigitalPin.P11) == 0) {
         Launch()
@@ -152,6 +182,14 @@ basic.forever(function () {
             # . . . #
             `)
     }
+    if (Klar) {
+        pins.digitalWritePin(DigitalPin.P13, 1)
+        pins.digitalWritePin(DigitalPin.P14, 1)
+    } else {
+        pins.digitalWritePin(DigitalPin.P13, 0)
+        pins.digitalWritePin(DigitalPin.P14, 0)
+    }
+    NeoPixels()
     basic.pause(100)
 })
 control.inBackground(function () {
