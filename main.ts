@@ -52,8 +52,8 @@ function Launch () {
             . . # . .
             . . # . .
             `)
-        BuzzerBlink()
         radio.sendNumber(42)
+        BuzzerBlink()
         strip.clear()
         strip.show()
         while (pins.digitalReadPin(DigitalPin.P1) == 0) {
@@ -118,26 +118,14 @@ function Initialize () {
     basic.pause(200)
 }
 function BuzzerBlink () {
-    pins.digitalWritePin(DigitalPin.P13, 0)
-    pins.digitalWritePin(DigitalPin.P14, 0)
-    basic.pause(100)
-    pins.digitalWritePin(DigitalPin.P13, 1)
-    pins.digitalWritePin(DigitalPin.P14, 1)
-    basic.pause(100)
-    pins.digitalWritePin(DigitalPin.P13, 0)
-    pins.digitalWritePin(DigitalPin.P14, 0)
-    basic.pause(100)
-    pins.digitalWritePin(DigitalPin.P13, 1)
-    pins.digitalWritePin(DigitalPin.P14, 1)
-    basic.pause(100)
-    pins.digitalWritePin(DigitalPin.P13, 0)
-    pins.digitalWritePin(DigitalPin.P14, 0)
-    basic.pause(100)
-    pins.digitalWritePin(DigitalPin.P13, 1)
-    pins.digitalWritePin(DigitalPin.P14, 1)
-    basic.pause(100)
-    pins.digitalWritePin(DigitalPin.P13, 0)
-    pins.digitalWritePin(DigitalPin.P14, 0)
+    for (let index = 0; index < 4; index++) {
+        pins.digitalWritePin(DigitalPin.P13, 1)
+        pins.digitalWritePin(DigitalPin.P14, 1)
+        basic.pause(100)
+        pins.digitalWritePin(DigitalPin.P13, 0)
+        pins.digitalWritePin(DigitalPin.P14, 0)
+        basic.pause(100)
+    }
 }
 let ArmStatus = false
 let Klar = false
